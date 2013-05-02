@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<local:Oficina xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:local="*" width="776" height="500">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.ProgressBar;
+			
+			public static var image:String ="../imagenes/2puertas.jpg";
+			
+			override public function setCorrectDoor():void
+			{
+				var numero:Number = Math.random();
+				if (numero < 0.5)
+					correctDoor=0;
+				else 
+					correctDoor=1;
+			}						
+			
+			override public function setup(ev:ExternalCreationComplete):void
+			{
+				griega.source="../imagenes/periodista_griega.jpg";
+				backgroundImage.source = image;
+				buttons = new ArrayCollection();
+				buttons.addItem(puerta1);
+				buttons.addItem(puerta2);
+				level=1;
+				super.setup(ev);
+			}
+			
+			override public function reduceProgress(ev:TimerEvent):void
+			{
+				if (this.progress.value > 0)
+					this.progress.setProgress(this.progress.value - 1, TOTAL);
+			}
+			
+			public function clicked(ev:MouseEvent):void
+			{
+				var boton:int = buttons.getItemIndex(Button(ev.target));
+				if (boton != correctDoor)
+				{
+					griega.visible=true;
+					meQuieroIr.visible=true;
+					progress.visible=true;
+					t.start();
+					setDoorsAs(false);
+				} else {
+					nextLevel();
+				}
+			}
+			
+			public function iWannaGo():void
+			{
+				this.progress.setProgress(this.progress.value + 1, TOTAL);
+			}
+			
+			protected function completed(event:Event):void
+			{
+				t.stop();
+				this.progress.setProgress(0, TOTAL);
+				this.progress.visible=false;
+				this.meQuieroIr.visible=false;		
+				setDoorsAs(true);  
+				griega.visible=false;
+			}
+			
+			override public function decrement(ev:TimerEvent):void
+			{
+				this.progress.setProgress(this.progress.value -1, TOTAL);				
+			}
+			
+			protected function mouseOver(event:MouseEvent):void
+			{
+				event.target.alpha = 0.4;
+			}
+			
+			protected function mouseOut(event:MouseEvent):void
+			{
+				event.target.alpha=0;
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Image id="backgroundImage" width="100%" height="100%" fillMode="scale" source="@Embed('../imagenes/2puertas.jpg')">
+		
+	</s:Image>
+	<s:Button id="puerta1" x="277" y="191" width="86" height="177" alpha="0" chromeColor="#FFFFFF"
+			  click="clicked(event)" mouseOver="mouseOver(event)" mouseOut="mouseOut(event)"/>
+	<s:Button id="puerta2" x="449" y="191" width="86" height="177" alpha="0"
+			  click="clicked(event)" mouseOver="mouseOver(event)" mouseOut="mouseOut(event)"/>
+	<s:Button id="meQuieroIr" x="648" y="263" label="Me quiero ir" click="iWannaGo()" visible="false"/>
+	<mx:ProgressBar id="progress" x="648" y="292" mode="manual" minimum="0" maximum="10" complete="completed(event)" visible="false"/>
+	<s:Image id="griega" x="93" y="189" source="@Embed('../imagenes/periodista_griega.jpg')" visible="false"/>
+</local:Oficina>

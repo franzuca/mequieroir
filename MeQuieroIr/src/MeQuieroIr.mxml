@@ -1,9 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
-			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" creationComplete="creationComplete(event)">
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:ns1="*"
+			   minWidth="955" minHeight="600"
+			   creationComplete="creationComplete(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			public var current:int = 1;
+			
+			protected function creationComplete(event:FlexEvent):void
+			{
+				office2.callback=change;
+				office3.callback=change;
+				office4.callback=change;
+			}
+			
+			public function change():void
+			{
+				switch (current)
+				{
+					case 1: office2.visible=false; office3.visible=true; current++;break;
+					case 2: office3.visible=false; office4.visible=true; current++;break;
+					case 3: office4.visible=false; office5.visible=true; current++;break;
+				}
+			}
+			
+			
+		]]>
+	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-
+	<ns1:Oficina2 id="office2" x="148" y="59">
+	</ns1:Oficina2>
+	<ns1:Oficina3 id="office3" x="148" y="59" visible="false">
+	</ns1:Oficina3>
+	<ns1:Oficina4 id="office4" x="148" y="59" visible="false">
+	</ns1:Oficina4>
+	<ns1:Oficina5 id="office5" x="148" y="59" visible="false">
+	</ns1:Oficina5>
+	<s:Label x="345" y="12" fontFamily="Georgia" fontSize="25"
+			 text="Ayudá al ministro a cumplir su deseo!"/>
 </s:Application>
