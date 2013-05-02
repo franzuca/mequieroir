@@ -13,10 +13,14 @@
 			override public function setCorrectDoor():void
 			{
 				var numero:Number = Math.random();
-				if (numero < 0.5)
+				if (numero < 0.25)
 					correctDoor=0;
-				else 
+				else if (numero < 0.5)
 					correctDoor=1;
+				else if (numero < 0.75)
+					correctDoor=2;
+				else
+					correctDoor=3;
 			}						
 			
 			override public function setup(ev:ExternalCreationComplete):void
