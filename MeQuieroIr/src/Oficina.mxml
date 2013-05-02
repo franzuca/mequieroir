@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="404" height="402" 
-		 updateComplete="creationComplete(event)">
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="404" height="402" creationComplete="creationComplete(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -23,7 +23,11 @@
 			public static var image:String = Imagenes.dosPuertas;
 			public var callback:Function;
 			protected var t:Timer;
-
+			protected var looseTimer:Timer;
+			public var _looseFunction:Function;
+			protected static var timeForLoose:int = 15;
+			protected static var redColor:Number=0xFF0000;
+			protected var remainingTime:int;
 			
 			protected function setDoorsAs(value:Boolean):void
 			{
@@ -51,6 +55,7 @@
 			
 			public function setup(ev:ExternalCreationComplete):void
 			{
+				remainingTime=timeForLoose;
 				setCorrectDoor();
 				dictionaryOfTimes =new ArrayCollection();
 				dictionaryOfTimes.addItem(500);
@@ -60,8 +65,25 @@
 
 				t= new Timer(Number(dictionaryOfTimes.getItemAt(level)));
 				t.addEventListener(TimerEvent.TIMER, decrement);
+				
+				looseTimer = new Timer(1000, 15);
+				looseTimer.addEventListener(TimerEvent.TIMER, oneSecond);
+				looseTimer.addEventListener(TimerEvent.TIMER_COMPLETE, loose);
 			}
 			
+			public function set looseFunction(v:Function):void
+			{
+				this._looseFunction = v;
+			}
+			
+			public function loose(ev:TimerEvent):void
+			{
+				_looseFunction(null);
+			}
+			public function oneSecond(ev:TimerEvent):void
+			{
+				
+			}
 			public function decrement(ev:TimerEvent):void
 			{
 				

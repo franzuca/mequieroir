@@ -11,7 +11,6 @@
 			import mx.controls.ProgressBar;
 			
 			public static var image:String ="../imagenes/2puertas.jpg";
-			
 			override public function setCorrectDoor():void
 			{
 				var numero:Number = Math.random();
@@ -32,11 +31,7 @@
 				super.setup(ev);
 			}
 			
-			override public function reduceProgress(ev:TimerEvent):void
-			{
-				if (this.progress.value > 0)
-					this.progress.setProgress(this.progress.value - 1, TOTAL);
-			}
+
 			
 			public function clicked(ev:MouseEvent):void
 			{
@@ -48,6 +43,10 @@
 					progress.visible=true;
 					t.start();
 					setDoorsAs(false);
+					timerLabel.visible=true;
+					timerLabel.text = timeForLoose + " segundos!";
+					timerLabel.setStyle("color", 0x000000);
+					looseTimer.start();
 				} else {
 					nextLevel();
 				}
@@ -60,17 +59,32 @@
 			
 			protected function completed(event:Event):void
 			{
+				looseTimer.stop();
+				looseTimer.reset();
+				remainingTime=timeForLoose;
 				t.stop();
 				this.progress.setProgress(0, TOTAL);
 				this.progress.visible=false;
-				this.meQuieroIr.visible=false;		
+				this.meQuieroIr.visible=false;	
+				this.timerLabel.visible=false;
+				this.timerLabel.text=remainingTime + " segundos!";
 				setDoorsAs(true);  
 				griega.visible=false;
 			}
 			
 			override public function decrement(ev:TimerEvent):void
 			{
-				this.progress.setProgress(this.progress.value -1, TOTAL);				
+				if (this.progress.value > 0)
+					this.progress.setProgress(this.progress.value -1, TOTAL);
+
+			}
+			
+			override public function oneSecond(ev:TimerEvent):void
+			{
+				remainingTime--;
+				timerLabel.text=remainingTime + " segundos!"
+				if (this.remainingTime <= 5)
+					timerLabel.setStyle("color", redColor);				
 			}
 			
 			protected function mouseOver(event:MouseEvent):void
@@ -95,4 +109,5 @@
 	<s:Button id="meQuieroIr" x="648" y="263" label="Me quiero ir" click="iWannaGo()" visible="false"/>
 	<mx:ProgressBar id="progress" x="648" y="292" mode="manual" minimum="0" maximum="10" complete="completed(event)" visible="false"/>
 	<s:Image id="griega" x="93" y="189" source="@Embed('../imagenes/periodista_griega.jpg')" visible="false"/>
+	<s:Label id="timerLabel" x="709" y="345" text="X segundos!" visible="false"/>
 </local:Oficina>

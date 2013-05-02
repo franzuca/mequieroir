@@ -3,8 +3,10 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   xmlns:ns1="*"
+			   xmlns:fonts="Chocolate.ttf"
 			   minWidth="955" minHeight="600"
 			   creationComplete="creationComplete(event)">
+	<fx:Style source="css.css"/>
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
@@ -16,16 +18,74 @@
 				office2.callback=change;
 				office3.callback=change;
 				office4.callback=change;
+				office2.looseFunction=loose;
+				office3.looseFunction=loose;
+				office4.looseFunction=loose;
+				var t:Timer = new Timer(2000, 1);
+				t.addEventListener(TimerEvent.TIMER,
+					function (ev:TimerEvent):void
+					{
+						doChange(lorenzino, office2);
+					});
+				t.addEventListener(TimerEvent.TIMER_COMPLETE, 
+					function (ev:TimerEvent):void
+					{
+						title.visible=true;
+					});
+				t.start();
+			}
+			
+			protected function doChange(previous:Object, next: Object):void
+			{
+				next.alpha=0;
+				
+				var times:int = 0;
+				var t:Timer = new Timer(100, 10);
+				var t2:Timer = new Timer(100, 10);
+				t2.addEventListener(TimerEvent.TIMER, 
+					function (ev:TimerEvent):void{
+						next.alpha=next.alpha + 0.1;
+					});
+				t2.addEventListener(TimerEvent.TIMER_COMPLETE,
+					function (ev:TimerEvent):void
+					{
+						next.alpha=1;
+					});
+				t.addEventListener(TimerEvent.TIMER_COMPLETE,
+					function (ev:TimerEvent):void
+					{
+						next.visible=true;
+						t2.start();
+					});
+				t.addEventListener(TimerEvent.TIMER,
+					function (ev:TimerEvent):void
+					{
+						previous.alpha=previous.alpha-0.1;
+					});
+				t.start();
+				
 			}
 			
 			public function change():void
 			{
 				switch (current)
 				{
-					case 1: office2.visible=false; office3.visible=true; current++;break;
-					case 2: office3.visible=false; office4.visible=true; current++;break;
-					case 3: office4.visible=false; office5.visible=true; current++;break;
+					case 1: doChange(office2, office3); current++;break;
+					case 2: doChange(office3, office4); current++;break;
+					case 3: doChange(office4, office5); current++;break;
 				}
+			}
+			
+			public function loose(ev:TimerEvent):void
+			{
+				trace("ESTOY ACA");
+				switch (current)
+				{
+					case 1: break;//TODO: falta perder!
+					case 2: doChange(office3, office2); current--;break;
+					case 3: doChange(office4, office3); current--;break;
+					case 4: doChange(office5, office4); current--;break;
+				}			
 			}
 			
 			
@@ -34,7 +94,10 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<ns1:Oficina2 id="office2" x="148" y="59">
+	<s:Image id="lorenzino" source="@Embed(source='../imagenes/mequieroir.jpg')" width="100%" height="100%">
+		
+	</s:Image>
+	<ns1:Oficina2 id="office2" x="148" y="59" visible="false">
 	</ns1:Oficina2>
 	<ns1:Oficina3 id="office3" x="148" y="59" visible="false">
 	</ns1:Oficina3>
@@ -42,6 +105,5 @@
 	</ns1:Oficina4>
 	<ns1:Oficina5 id="office5" x="148" y="59" visible="false">
 	</ns1:Oficina5>
-	<s:Label x="345" y="12" fontFamily="Georgia" fontSize="25"
-			 text="Ayudá al ministro a cumplir su deseo!"/>
+	<s:Label id="title" x="274" y="34" text="#MeQuieroIr Ayudá al ministro a cumplir su deseo!" visible="false" width="100%" textAlign="left"/>
 </s:Application>
