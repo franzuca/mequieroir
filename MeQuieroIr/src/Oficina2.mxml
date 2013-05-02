@@ -10,7 +10,8 @@
 			import mx.collections.ArrayCollection;
 			import mx.controls.ProgressBar;
 			
-			public static var image:String ="../imagenes/2puertas.jpg";
+			[Embed(source="./imagenes/2puertas.jpg")]
+			public static var image:String;// ="../imagenes/2puertas.jpg";
 			override public function setCorrectDoor():void
 			{
 				var numero:Number = Math.random();
@@ -22,8 +23,8 @@
 			
 			override public function setup(ev:ExternalCreationComplete):void
 			{
-				griega.source="../imagenes/periodista_griega.jpg";
-				backgroundImage.source = image;
+				//griega.source="../imagenes/periodista_griega.jpg";
+				//backgroundImage.source = image;
 				buttons = new ArrayCollection();
 				buttons.addItem(puerta1);
 				buttons.addItem(puerta2);
